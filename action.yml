@@ -1,23 +1,25 @@
-name: 'Contributions'
-description: 'Manage nrfconnect contributions'
+name: 'Comment'
+description: 'Post comment to pull request'
 inputs:
   github-token:
     description: 'The token to authenticate with'
-  command:
-    description: 'Command to execute'
-    required: true
-  messages:
-    description: '|-separated Messages to post'
+  message:
+    description: 'Message to post'
     required: false
     default: 'none'
-  labels:
-    description: 'Comma-separated list of labels'
+  note:
+    description: 'Note comment used to find the comment for updating'
     required: false
-    default: 'none'
-
+  reaction:
+    description: 'Reaction to check by the PR author'
+    required: false
+outputs:
+  found_reaction:
+    description: 'Found reaction in comment'
+    value: ${{ steps.run-python.outputs.found_reaction }}
 runs:
   using: "composite"
-  steps: 
+  steps:
     - id: setup-python
       run: |
         pip3 install setuptools wheel
@@ -25,8 +27,8 @@ runs:
       shell: bash
     - id: run-python
       run: |
-           python3 ${{ github.action_path }}/action.py -c "${{ inputs.command }}" \
-           -m "${{ inputs.messages }}" -l "${{ inputs.labels }}"
+           python3 ${{ github.action_path }}/action.py -n "${{ inputs.note }}" \
+           -m "${{ inputs.message }}" -r "${{ inputs.reaction }}"
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
