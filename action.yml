@@ -22,8 +22,7 @@ runs:
   steps:
     - id: setup-python
       run: |
-        pip3 install setuptools wheel
-        pip3 install -r ${{ github.action_path }}/requirements.txt
+        pip3 install setuptools wheel pygithub
       shell: bash
     - id: run-python
       run: |
